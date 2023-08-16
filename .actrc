@@ -1,1 +1,1 @@
--s POETRY_PYPI_TOKEN_PYPI
+act --env-file .env
