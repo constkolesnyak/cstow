@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cstow"
-version = "0.0.dev14"
+version = "0.0.1"
 description = "GNU Stow wrapper"
 authors = ["Konstantin Kolesnyak <constkolesnyak@gmail.com>"]
 readme = "README.md"
