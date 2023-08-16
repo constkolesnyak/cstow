@@ -1,1 +1,1 @@
-act --env-file .env
+--env-file .env
