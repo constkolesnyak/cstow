@@ -1,5 +1,5 @@
-# cstow (WIP)
+# cstow
 
 ## Installation
 
-    pipx cstow    
+    pipx install cstow
