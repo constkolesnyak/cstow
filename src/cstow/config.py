@@ -10,7 +10,7 @@ import attrs
 import pydantic
 from path import Path
 
-from cstow import command
+from . import command
 
 TarsDirsStr = dict[str, list[str]]
 TarsDirsPath = dict[Path, list[Path]]
