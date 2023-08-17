@@ -1,7 +1,8 @@
 import subprocess
 from typing import Callable
 
-from cstow.config import CmdAction, CmdVars, Config
+from cstow.command import CmdAction, CmdVars
+from cstow.config import Config
 from cstow.view import View
 
 Proc = subprocess.CompletedProcess[bytes]

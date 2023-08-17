@@ -1,9 +1,7 @@
 import copy
 import itertools
 import os
-import shlex
 import tomllib
-from enum import StrEnum, auto
 from functools import partial
 from string import Template
 from typing import Iterator, Optional
@@ -12,48 +10,13 @@ import attrs
 import pydantic
 from path import Path
 
+from cstow import command
+
 TarsDirsStr = dict[str, list[str]]
 TarsDirsPath = dict[Path, list[Path]]
 
 
-class CmdAction(StrEnum):
-    NO = auto()
-    RESTOW = auto()
-    DELETE = auto()
-
-
-class InvalidActionError(Exception):
-    def __init__(self, action: str) -> None:
-        super().__init__(
-            f"Action '{action}' is invalid\nUse one of these: " + ', '.join(CmdAction)
-        )
-
-
-@attrs.define(slots=False)
-class CmdVars:
-    action: str = attrs.field()
-    directory: str
-    target: str
-
-    @action.validator  # type: ignore
-    def _(self, attr, action: CmdAction) -> None:  # type: ignore
-        if action not in list(CmdAction):
-            raise InvalidActionError(action)
-
-    @classmethod
-    def fields(cls) -> Iterator[str]:
-        return map(lambda field: field.name, attrs.fields(cls))
-
-    def cmd(self, template: Template) -> str:
-        return template.substitute(
-            **{attr: shlex.quote(val) for attr, val in vars(self).items()}
-        )
-
-
 _CONFIG_PATH_ENV_VAR = 'CSTOW_CONFIG_PATH'
-_COMMAND_TEMPLATE_DEFAULT: str = (
-    "stow --${} --no-folding --verbose -d ${} -t ${} . 2>&1 | grep -v -e '^BUG' -e '^WARN'"
-).format(*CmdVars.fields())
 
 # todo ConfigError(Exception) - base class for Config exceptions
 
@@ -73,7 +36,7 @@ class InvalidConfigError(Exception):
 class _RawConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra='forbid')
 
-    cmd_template: str = _COMMAND_TEMPLATE_DEFAULT
+    cmd_template: str = command.COMMAND_TEMPLATE_DEFAULT
     root_dir: str = Path('/')
     targets_dirs: TarsDirsStr
 
@@ -150,6 +113,8 @@ def _str_to_dir(path_str: str, root_dir: Path = Path('/')) -> Path:
 
 def _str_to_cmd_template(template_str: str) -> Optional[Template]:
     template = Template(template_str)
-    if template.is_valid() and set(template.get_identifiers()) == set(CmdVars.fields()):
+    if template.is_valid() and set(template.get_identifiers()) == set(
+        command.CmdVars.fields()
+    ):
         return template
     return None

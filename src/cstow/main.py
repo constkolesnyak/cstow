@@ -3,13 +3,8 @@ from typing import Any, NoReturn
 
 import fire  # type: ignore
 
-from cstow.config import (
-    CmdAction,
-    Config,
-    ConfigEnvVarUnsetError,
-    InvalidActionError,
-    InvalidConfigError,
-)
+from cstow.command import CmdAction, InvalidActionError
+from cstow.config import Config, ConfigEnvVarUnsetError, InvalidConfigError
 from cstow.stow import stow
 from cstow.view import PlainView
 
