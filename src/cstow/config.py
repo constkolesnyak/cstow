@@ -55,6 +55,8 @@ _COMMAND_TEMPLATE_DEFAULT: str = (
     "stow --${} --no-folding --verbose -d ${} -t ${} . 2>&1 | grep -v -e '^BUG' -e '^WARN'"
 ).format(*CmdVars.fields())
 
+# todo ConfigError(Exception) - base class for Config exceptions
+
 
 class ConfigEnvVarUnsetError(Exception):
     def __init__(self, env_var: str) -> None:
@@ -86,7 +88,9 @@ class _RawConfig(pydantic.BaseModel):
         try:
             return cls(**tomllib.loads(path.read_text()), config_path=path)
         except FileNotFoundError:
-            raise FileNotFoundError(f"Config '{path}' is not found")
+            raise FileNotFoundError(
+                f"Config '{path}' is not found"
+            )  # todo ConfigNotFoundError
         except (tomllib.TOMLDecodeError, pydantic.ValidationError) as e:
             raise InvalidConfigError(path, e)
         except TypeError:
@@ -115,6 +119,7 @@ class Config:
                 f"'cmd_template' is invalid:\n{raw_cfg.cmd_template}",
             )
 
+        # todo FileNotFound -> InvalidConfig exceptions
         root_dir: Path = _str_to_dir(raw_cfg.root_dir)
         targets_dirs: TarsDirsPath = _tds_to_tdp(raw_cfg.targets_dirs, root_dir)
 
