@@ -10,7 +10,7 @@ import attrs
 import pydantic
 from path import Path
 
-from . import command
+from .command import COMMAND_TEMPLATE_DEFAULT, CmdVars
 
 TarsDirsStr = dict[str, list[str]]
 TarsDirsPath = dict[Path, list[Path]]
@@ -36,7 +36,7 @@ class InvalidConfigError(Exception):
 class _RawConfig(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra='forbid')
 
-    cmd_template: str = command.COMMAND_TEMPLATE_DEFAULT
+    cmd_template: str = COMMAND_TEMPLATE_DEFAULT
     root_dir: str = Path('/')
     targets_dirs: TarsDirsStr
 
@@ -113,8 +113,6 @@ def _str_to_dir(path_str: str, root_dir: Path = Path('/')) -> Path:
 
 def _str_to_cmd_template(template_str: str) -> Optional[Template]:
     template = Template(template_str)
-    if template.is_valid() and set(template.get_identifiers()) == set(
-        command.CmdVars.fields()
-    ):
+    if template.is_valid() and set(template.get_identifiers()) == set(CmdVars.fields()):
         return template
     return None
