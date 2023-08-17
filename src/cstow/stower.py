@@ -1,7 +1,7 @@
 import itertools
+import subprocess
 from enum import StrEnum, auto
-from subprocess import CompletedProcess, run
-from typing import Iterator
+from typing import Callable, Iterator
 
 from path import Path
 
@@ -16,6 +16,13 @@ class CmdAction(StrEnum):
 
 # Put it here to resolve circular import
 from cstow.view import View
+
+Proc = subprocess.CompletedProcess[bytes]
+Run = Callable[[str], Proc]
+
+
+def _run(cmd: str) -> Proc:
+    return subprocess.run(args=[cmd], shell=True, capture_output=True)
 
 
 class InvalidActionError(Exception):
@@ -34,14 +41,14 @@ class Stower:
             raise InvalidActionError(action)
         self.action: CmdAction = action
 
-    def stow(self) -> None:
+    def stow(self, run: Run = _run) -> None:
         self.view.handle_action(self.action)
 
         for target, dir_ in self._each_target_and_dir():
             self.view.handle_dir(dir_)
 
             cmd: str = self._create_cmd(target, dir_)
-            proc: CompletedProcess[bytes] = run(args=[cmd], shell=True, capture_output=True)
+            proc: Proc = run(cmd)
             # todo exceptions
 
             self.view.handle_proc(proc)
