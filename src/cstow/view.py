@@ -4,7 +4,7 @@ from subprocess import CompletedProcess
 
 from path import Path
 
-from cstow.stower import CmdAction
+from cstow.config import CmdAction
 
 
 class View(ABC):

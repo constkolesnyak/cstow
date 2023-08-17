@@ -3,8 +3,14 @@ from typing import Any, NoReturn
 
 import fire  # type: ignore
 
-from cstow.config import Config, ConfigEnvVarUnsetError, InvalidConfigError
-from cstow.stower import CmdAction, InvalidActionError, Stower
+from cstow.config import (
+    CmdAction,
+    Config,
+    ConfigEnvVarUnsetError,
+    InvalidActionError,
+    InvalidConfigError,
+)
+from cstow.stow import stow
 from cstow.view import PlainView
 
 
@@ -17,8 +23,7 @@ def _error(*args: Any, **kwargs: Any) -> NoReturn:
 def _cli(action: CmdAction = CmdAction.NO) -> None:
     try:
         config: Config = Config.from_env_var()
-        stower = Stower(config, PlainView(), action)
-        stower.stow()
+        stow(config, PlainView(), action)
     except (
         InvalidConfigError,
         ConfigEnvVarUnsetError,

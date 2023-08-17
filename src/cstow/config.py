@@ -1,10 +1,12 @@
 import copy
+import itertools
 import os
+import shlex
 import tomllib
 from enum import StrEnum, auto
 from functools import partial
 from string import Template
-from typing import Optional
+from typing import Iterator, Optional
 
 import attrs
 import pydantic
@@ -14,16 +16,44 @@ TarsDirsStr = dict[str, list[str]]
 TarsDirsPath = dict[Path, list[Path]]
 
 
-class CmdVars(StrEnum):
-    ACTION = auto()
-    DIRECTORY = auto()
-    TARGET = auto()
+class CmdAction(StrEnum):
+    NO = auto()
+    RESTOW = auto()
+    DELETE = auto()
+
+
+class InvalidActionError(Exception):
+    def __init__(self, action: str) -> None:
+        super().__init__(
+            f"Action '{action}' is invalid\nUse one of these: " + ', '.join(CmdAction)
+        )
+
+
+@attrs.define(slots=False)
+class CmdVars:
+    action: str = attrs.field()
+    directory: str
+    target: str
+
+    @action.validator  # type: ignore
+    def _(self, attr, action: CmdAction) -> None:  # type: ignore
+        if action not in list(CmdAction):
+            raise InvalidActionError(action)
+
+    @classmethod
+    def fields(cls) -> Iterator[str]:
+        return map(lambda field: field.name, attrs.fields(cls))
+
+    def cmd(self, template: Template) -> str:
+        return template.substitute(
+            **{attr: shlex.quote(val) for attr, val in vars(self).items()}
+        )
 
 
 _CONFIG_PATH_ENV_VAR = 'CSTOW_CONFIG_PATH'
 _COMMAND_TEMPLATE_DEFAULT: str = (
-    "stow --'${}' --no-folding --verbose -d '${}' -t '${}' . 2>&1 | grep -v -e '^BUG' -e '^WARN'"
-).format(*CmdVars)
+    "stow --${} --no-folding --verbose -d ${} -t ${} . 2>&1 | grep -v -e '^BUG' -e '^WARN'"
+).format(*CmdVars.fields())
 
 
 class ConfigEnvVarUnsetError(Exception):
@@ -94,6 +124,10 @@ class Config:
     def from_env_var(cls, env_var: str = _CONFIG_PATH_ENV_VAR) -> "Config":
         return Config._from_raw_config(_RawConfig.from_env_var(env_var))
 
+    def each_target_and_dir(self) -> Iterator[tuple[Path, Path]]:
+        for target, dirs in self.targets_dirs.items():
+            yield from itertools.product((target,), dirs)
+
 
 def _tds_to_tdp(targets_dirs: TarsDirsStr, root_dir: Path) -> TarsDirsPath:
     return {
@@ -111,6 +145,6 @@ def _str_to_dir(path_str: str, root_dir: Path = Path('/')) -> Path:
 
 def _str_to_cmd_template(template_str: str) -> Optional[Template]:
     template = Template(template_str)
-    if template.is_valid() and set(template.get_identifiers()) == set(CmdVars):
+    if template.is_valid() and set(template.get_identifiers()) == set(CmdVars.fields()):
         return template
     return None
