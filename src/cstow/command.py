@@ -1,5 +1,6 @@
 import shlex
 from enum import StrEnum, auto
+from operator import attrgetter
 from string import Template
 from typing import Iterator
 
@@ -12,7 +13,7 @@ class CmdAction(StrEnum):
     DELETE = auto()
 
 
-class InvalidActionError(Exception):
+class InvalidCmdActionError(Exception):
     def __init__(self, action: str) -> None:
         super().__init__(
             f"Action '{action}' is invalid\nUse one of these: " + ', '.join(CmdAction)
@@ -28,11 +29,11 @@ class CmdVars:
     @action.validator  # type: ignore
     def _(self, attr, action: CmdAction) -> None:  # type: ignore
         if action not in list(CmdAction):
-            raise InvalidActionError(action)
+            raise InvalidCmdActionError(action)
 
     @classmethod
     def fields(cls) -> Iterator[str]:
-        return map(lambda field: field.name, attrs.fields(cls))  # todo attrgetter
+        return map(attrgetter('name'), attrs.fields(cls))
 
     def cmd(self, template: Template) -> str:
         return template.substitute(
