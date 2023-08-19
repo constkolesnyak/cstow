@@ -1,0 +1,4 @@
+root_dir = '$CSTOW_DEV_TESTING_DATA'
+
+[targets_dirs]
+'$CSTOW_DEV_TESTING_DATA/target' = ['dir']

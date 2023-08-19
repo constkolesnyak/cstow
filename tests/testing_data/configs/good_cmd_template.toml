@@ -1,0 +1,4 @@
+cmd_template = 'echo "action: $action\ntarget: $target\ndir: $dir\n" && stow --$action --no-folding --verbose -d $dir -t $target .'
+
+[targets_dirs]
+'$CSTOW_DEV_TESTING_DATA/target' = ['$CSTOW_DEV_TESTING_DATA/dir']

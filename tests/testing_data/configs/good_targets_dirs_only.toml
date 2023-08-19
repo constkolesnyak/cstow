@@ -1,0 +1,2 @@
+[targets_dirs]
+'$CSTOW_DEV_TESTING_DATA/target' = ['$CSTOW_DEV_TESTING_DATA/dir']
