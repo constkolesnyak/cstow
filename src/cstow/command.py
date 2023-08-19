@@ -9,6 +9,7 @@ import attrs
 
 class CmdAction(StrEnum):
     NO = auto()
+    STOW = auto()
     RESTOW = auto()
     DELETE = auto()
 
