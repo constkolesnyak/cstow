@@ -3,10 +3,10 @@ from typing import Any, NoReturn
 
 import fire  # type: ignore
 
-from .command import CmdAction, InvalidCmdActionError
-from .config import Config, ConfigEnvVarUnsetError, InvalidConfigError
-from .stow import stow
-from .view import PlainView
+from cstow.command import CmdAction, InvalidCmdActionError
+from cstow.config import Config, ConfigEnvVarUnsetError, InvalidConfigError
+from cstow.stow import stow
+from cstow.view import PlainView
 
 
 def _error(*args: Any, **kwargs: Any) -> NoReturn:

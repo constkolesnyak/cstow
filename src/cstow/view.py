@@ -4,7 +4,7 @@ from subprocess import CompletedProcess
 
 from path import Path
 
-from .command import CmdAction
+from cstow.command import CmdAction
 
 
 class View(ABC):

@@ -1,9 +1,9 @@
 import subprocess
 from typing import Callable
 
-from .command import CmdAction, CmdVars
-from .config import Config
-from .view import View
+from cstow.command import CmdAction, CmdVars
+from cstow.config import Config
+from cstow.view import View
 
 Proc = subprocess.CompletedProcess[bytes]
 Run = Callable[[str], Proc]
