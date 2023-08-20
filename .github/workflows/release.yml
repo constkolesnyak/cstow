@@ -5,9 +5,7 @@ on:
     tags:
       - '*'
 
-
 jobs:
- 
   gh-release:
     runs-on: ubuntu-latest
     permissions:
@@ -24,8 +22,8 @@ jobs:
   pypi-release:
     strategy:
       matrix:
-        python-version: ["3.x"]
-        poetry-version: ["1.5.1"]
+        python-version: ['3.x']
+        poetry-version: ['1.5.1']
     runs-on: ubuntu-latest
     env:
       POETRY_PYPI_TOKEN_PYPI: ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
@@ -41,4 +39,4 @@ jobs:
         # Use pipx if the workflow becomes complex
         # https://python-poetry.org/docs/master#ci-recommendations
       - name: Build and publish to PyPI
-        run: poetry publish --build 
+        run: poetry publish --build
