@@ -24,11 +24,11 @@ class InvalidCmdActionError(Exception):
 @attrs.define(slots=False)
 class CmdVars:
     action: str = attrs.field()
-    directory: str
+    dir: str
     target: str
 
     @action.validator  # type: ignore
-    def _(self, attr, action: CmdAction) -> None:  # type: ignore
+    def _(self, _, action: CmdAction) -> None:
         if action not in list(CmdAction):
             raise InvalidCmdActionError(action)
 
@@ -38,7 +38,7 @@ class CmdVars:
 
     def cmd(self, template: Template) -> str:
         return template.substitute(
-            **{attr: shlex.quote(val) for attr, val in vars(self).items()}
+            **{field: shlex.quote(val) for field, val in vars(self).items()}
         )
 
 
