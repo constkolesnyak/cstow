@@ -10,15 +10,15 @@ from cstow.command import CmdAction
 class View(ABC):
     @abstractmethod
     def handle_action(self, action: CmdAction) -> None:
-        pass
+        ''''''
 
     @abstractmethod
     def handle_dir(self, dir_: Path) -> None:
-        pass
+        ''''''
 
     @abstractmethod
     def handle_proc(self, proc: CompletedProcess[bytes]) -> None:
-        pass
+        ''''''
 
 
 class PlainView(View):
