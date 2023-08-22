@@ -1,4 +1,4 @@
-root_dir = '$CSTOW_DEV_TESTING_DATA'
+root_dir = '$CSTOW_TESTING_DATA'
 
 [targets_dirs]
-'$CSTOW_DEV_TESTING_DATA/target' = ['dir']
+'$CSTOW_TESTING_DATA/target' = ['dir']
