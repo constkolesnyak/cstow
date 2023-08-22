@@ -16,13 +16,20 @@ DIR_FILE: Path = TESTING_DATA / 'dir' / 'file'
 TARGET_SYMLINK: Path = TESTING_DATA / 'target' / 'file'
 
 
+def get_configs(glob: str) -> list[str]:
+    '''Get config filenames matching the glob'''
+    return [cfg.name for cfg in CONFIGS.glob(glob)]
+
+
 @pytest.mark.smoke
-def test_good_configs() -> None:
-    for good_config in CONFIGS.glob('good_*'):
-        os.environ[_CONFIG_PATH_ENV_VAR] = good_config
-        TARGET_SYMLINK.remove_p()
-        _cli(CmdAction.STOW)
-        assert TARGET_SYMLINK.islink() and TARGET_SYMLINK.readlinkabs() == DIR_FILE
+@pytest.mark.parametrize("good_config", get_configs('good_*'))
+def test_good_configs(good_config: Path) -> None:
+    os.environ[_CONFIG_PATH_ENV_VAR] = CONFIGS / good_config
+
+    TARGET_SYMLINK.remove_p()
+    _cli(CmdAction.STOW)
+
+    assert TARGET_SYMLINK.islink() and TARGET_SYMLINK.readlinkabs() == DIR_FILE
 
 
 def test_bad_configs():
