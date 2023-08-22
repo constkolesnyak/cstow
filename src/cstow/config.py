@@ -7,7 +7,7 @@ from string import Template
 from typing import Iterator, Optional
 
 import attrs
-import pydantic
+import pydantic as pd
 from path import Path
 
 from cstow.command import COMMAND_TEMPLATE_DEFAULT, CmdVars
@@ -18,23 +18,44 @@ TarsDirsPath = dict[Path, list[Path]]
 
 _CONFIG_PATH_ENV_VAR = 'CSTOW_CONFIG_PATH'
 
-# todo ConfigError(Exception) - base class for Config exceptions
+
+class ConfigError(Exception):
+    ''''''
 
 
-class ConfigEnvVarUnsetError(Exception):
+class ConfigEnvVarUnsetError(ConfigError):
     def __init__(self, env_var: str) -> None:
         super().__init__(
             f'Environment variable {env_var} is unset. Expected path to cstow_config.toml'
         )
 
 
-class InvalidConfigError(Exception):
-    def __init__(self, path: str, message: Exception | str) -> None:
-        super().__init__(f"Config '{path}' is invalid:\n{message}")
+class ConfigNotFoundError(ConfigError):
+    def __init__(self, path: str) -> None:
+        super().__init__(f'No such file: {path}')
 
 
-class _RawConfig(pydantic.BaseModel):
-    model_config = pydantic.ConfigDict(extra='forbid')
+class InvalidConfigError(ConfigError):
+    def __init__(self, path: str, message: str) -> None:
+        super().__init__(f"Config is invalid: '{path}'\n\n{message}")
+
+    @classmethod
+    def from_pydantic(cls, path: str, exception: pd.ValidationError) -> Self:
+        messages: list[str] = []
+
+        for err in exception.errors():
+            loc = err['loc'][0]
+            inp = err['input']
+            msg = err['msg'].lstrip('Assertion failed, ')
+            messages.append(f"{loc}\n    input: '{inp}'\n    error: {msg}")
+
+        return cls(path, '\n\n'.join(messages))
+
+
+
+
+class _RawConfig(pd.BaseModel):
+    model_config = pd.ConfigDict(extra='forbid')
 
     cmd_template: str = COMMAND_TEMPLATE_DEFAULT
     root_dir: str = Path('/')
@@ -51,11 +72,9 @@ class _RawConfig(pydantic.BaseModel):
         try:
             return cls(**tomllib.loads(path.read_text()), config_path=path)
         except FileNotFoundError:
-            raise FileNotFoundError(
-                f"Config '{path}' is not found"
-            )  # todo ConfigNotFoundError
-        except (tomllib.TOMLDecodeError, pydantic.ValidationError) as e:
-            raise InvalidConfigError(path, e)
+            raise ConfigNotFoundError(path)
+        except (tomllib.TOMLDecodeError, pd.ValidationError) as e:
+            raise InvalidConfigError(path, str(e))
         except TypeError:
             raise InvalidConfigError(path, 'config_path\n  Extra keys are not permitted')
 

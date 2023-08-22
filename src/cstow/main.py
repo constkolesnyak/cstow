@@ -4,7 +4,7 @@ from typing import Any, NoReturn
 import fire  # type: ignore
 
 from cstow.command import CmdAction, InvalidCmdActionError
-from cstow.config import Config, ConfigEnvVarUnsetError, InvalidConfigError
+from cstow.config import Config, ConfigError
 from cstow.stow import stow
 from cstow.view import PlainView
 
@@ -19,12 +19,7 @@ def _cli(action: CmdAction = CmdAction.NO) -> None:
     try:
         config: Config = Config.from_env_var()
         stow(config, PlainView(), action)
-    except (
-        InvalidConfigError,
-        ConfigEnvVarUnsetError,
-        FileNotFoundError,
-        InvalidCmdActionError,
-    ) as e:
+    except (ConfigError, InvalidCmdActionError) as e:
         _error(e)
 
 
