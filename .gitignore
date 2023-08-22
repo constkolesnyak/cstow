@@ -1,5 +1,5 @@
 draft*.*
-
+Icon?
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -168,7 +168,6 @@ cython_debug/
 
 # Icon must end with two \r
 Icon
-
 
 # Thumbnails
 ._*
