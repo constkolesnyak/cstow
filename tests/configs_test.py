@@ -28,6 +28,7 @@ def test_good_configs(good_config: Path) -> None:
     os.environ[_CONFIG_PATH_ENV_VAR] = CONFIGS / good_config
 
     TARGET_SYMLINK.remove_p()
+    print('\n')
     _cli(CmdAction.STOW)
 
     assert TARGET_SYMLINK.islink() and TARGET_SYMLINK.readlinkabs() == DIR_FILE
@@ -37,5 +38,6 @@ def test_good_configs(good_config: Path) -> None:
 def test_bad_configs(bad_config: Path) -> None:
     os.environ[_CONFIG_PATH_ENV_VAR] = CONFIGS / bad_config
 
-    with pytest.raises(InvalidConfigError):
+    with pytest.raises(InvalidConfigError) as exc:
         Config.from_env_var()
+    print(f'\n\n{exc.value}\n')
