@@ -65,7 +65,14 @@ def _validate_cmd_template(template_str: str) -> Template:
     return template
 
 
+def _expand(path: str) -> Path:
+    return Path(path).expand()
+
+
 CmdTemplate = Annotated[str, pd.AfterValidator(_validate_cmd_template)]
+DirectoryPath = Annotated[pd.DirectoryPath, pd.BeforeValidator(_expand)]
+RawTarsDirs = dict[str, list[str]]
+TarsDirs = dict[DirectoryPath, list[DirectoryPath]]
 
 
 class Config(pd.BaseModel, extra='forbid'):
