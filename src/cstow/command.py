@@ -1,6 +1,5 @@
 import shlex
 from enum import StrEnum, auto
-from operator import attrgetter
 from string import Template
 from typing import Iterator
 
@@ -34,7 +33,7 @@ class CmdVars:
 
     @classmethod
     def fields(cls) -> Iterator[str]:
-        return map(attrgetter('name'), attrs.fields(cls))
+        return (field.name for field in attrs.fields(cls))
 
     def cmd(self, template: Template) -> str:
         return template.substitute(
