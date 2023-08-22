@@ -19,7 +19,7 @@ def stow(config: Config, view: View, action: CmdAction, run: Run = _run) -> None
     for target, dir_ in config.each_target_and_dir():
         view.handle_dir(dir_)
 
-        cmd: str = CmdVars(action, dir_, target).cmd(config.cmd_template)
+        cmd: str = CmdVars(action, target, dir_).cmd(config.cmd_template)
         proc: Proc = run(cmd)  # todo exceptions
 
         view.handle_proc(proc)

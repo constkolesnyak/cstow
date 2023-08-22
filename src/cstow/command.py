@@ -24,8 +24,8 @@ class InvalidCmdActionError(Exception):
 @attrs.define(slots=False)
 class CmdVars:
     action: str = attrs.field()
-    dir: str
     target: str
+    dir: str
 
     @action.validator  # type: ignore
     def _(self, _, action: CmdAction) -> None:
@@ -43,5 +43,5 @@ class CmdVars:
 
 
 COMMAND_TEMPLATE_DEFAULT: str = (
-    "stow --${} --no-folding --verbose -d ${} -t ${} . 2>&1 | grep -v -e '^BUG' -e '^WARN'"
+    "stow --${} --no-folding --verbose -t ${} -d ${} . 2>&1 | grep -v -e '^BUG' -e '^WARN'"
 ).format(*CmdVars.fields())
