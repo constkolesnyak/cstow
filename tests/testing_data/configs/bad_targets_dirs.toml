@@ -1,0 +1,6 @@
+root_dir = '$CSTOW_TESTING_DATA'
+cmd_template = 'echo "action: $action\ntarget: $target\ndir: $dir\n" && stow --$action --no-folding --verbose -d $dir -t $target .'
+
+[targets_dirs]
+'$CSTOW_TESTING_DATA/target' = ['dir']
+'asdfasdf' = ['qwerqwre']
