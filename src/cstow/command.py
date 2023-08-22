@@ -1,9 +1,9 @@
+import dataclasses as dc
 import shlex
 from enum import StrEnum, auto
 from string import Template
 from typing import Iterator
 
-import attrs
 from path import Path
 
 
@@ -21,20 +21,19 @@ class InvalidCmdActionError(Exception):
         )
 
 
-@attrs.define(slots=False)
+@dc.dataclass
 class CmdVars:
     action: CmdAction
     target: Path
     dir: Path
 
-    @action.validator  # type: ignore
-    def _(self, _, action: CmdAction) -> None:
-        if action not in list(CmdAction):
-            raise InvalidCmdActionError(action)
+    def __post_init__(self) -> None:
+        if self.action not in list(CmdAction):
+            raise InvalidCmdActionError(self.action)
 
     @classmethod
     def fields(cls) -> Iterator[str]:
-        return (field.name for field in attrs.fields(cls))
+        return (field.name for field in dc.fields(cls))
 
     def cmd(self, template: Template) -> str:
         return template.substitute(
