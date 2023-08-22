@@ -6,6 +6,7 @@ from path import Path
 
 from cstow.command import CmdAction
 from cstow.config import _CONFIG_PATH_ENV_VAR  # type: ignore
+from cstow.config import Config, InvalidConfigError
 from cstow.main import _cli  # type: ignore
 
 load_dotenv()
@@ -32,5 +33,9 @@ def test_good_configs(good_config: Path) -> None:
     assert TARGET_SYMLINK.islink() and TARGET_SYMLINK.readlinkabs() == DIR_FILE
 
 
-def test_bad_configs():
-    ...
+@pytest.mark.parametrize("bad_config", get_configs('bad_*'))
+def test_bad_configs(bad_config: Path) -> None:
+    os.environ[_CONFIG_PATH_ENV_VAR] = CONFIGS / bad_config
+
+    with pytest.raises(InvalidConfigError):
+        Config.from_env_var()
