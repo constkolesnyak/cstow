@@ -4,6 +4,7 @@ from string import Template
 from typing import Iterator
 
 import attrs
+from path import Path
 
 
 class CmdAction(StrEnum):
@@ -22,9 +23,9 @@ class InvalidCmdActionError(Exception):
 
 @attrs.define(slots=False)
 class CmdVars:
-    action: str = attrs.field()
-    target: str
-    dir: str
+    action: CmdAction
+    target: Path
+    dir: Path
 
     @action.validator  # type: ignore
     def _(self, _, action: CmdAction) -> None:
@@ -37,7 +38,7 @@ class CmdVars:
 
     def cmd(self, template: Template) -> str:
         return template.substitute(
-            **{field: shlex.quote(val) for field, val in vars(self).items()}
+            **{field: shlex.quote(str(val)) for field, val in vars(self).items()}
         )
 
 
