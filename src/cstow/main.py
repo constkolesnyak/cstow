@@ -25,3 +25,7 @@ def _cli(action: CmdAction = CmdAction.NO) -> None:
 
 def main() -> None:
     fire.Fire(_cli)  # type: ignore
+
+
+if __name__ == '__main__':
+    _cli()
