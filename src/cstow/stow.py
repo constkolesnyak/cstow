@@ -15,7 +15,7 @@ def _run(cmd: str) -> Proc:
     return subprocess.run(args=[cmd], shell=True, capture_output=True)
 
 
-def stow(config: Config, view: View, action: CmdAction, run: Run = _run) -> None:
+def stow(action: CmdAction, config: Config, view: View, run: Run = _run) -> None:
     view.handle_action(action)
 
     for target, dir_ in config.each_target_and_dir():

@@ -18,7 +18,7 @@ def _error(*args: Any, **kwargs: Any) -> NoReturn:
 def _cli(action: CmdAction = CmdAction.NO) -> None:
     try:
         config: Config = Config.from_env_var()
-        stow(config, PlainView(), action)
+        stow(action, config, PlainView())
     except (ConfigError, InvalidCmdActionError) as e:
         _error(e)
 
