@@ -8,6 +8,7 @@ from cstow.command import CmdAction
 from cstow.config import _CONFIG_PATH_ENV_VAR  # type: ignore
 from cstow.config import Config, InvalidConfigError
 from cstow.main import _cli  # type: ignore
+from tests.testing_utils import pyt_print
 
 load_dotenv()
 
@@ -40,4 +41,4 @@ def test_bad_configs(bad_config: Path) -> None:
 
     with pytest.raises(InvalidConfigError) as exc:
         Config.from_env_var()
-    print(f'\n\n{exc.value}\n')
+    pyt_print(exc.value)
