@@ -32,12 +32,12 @@ class ConfigEnvVarUnsetError(ConfigError):
 
 class ConfigNotFoundError(ConfigError):
     def __init__(self, path: str) -> None:
-        super().__init__(f'No such file: {path}')
+        super().__init__(f'No such file: {path}\nExpected path to cstow_config.toml')
 
 
 class InvalidConfigError(ConfigError):
     def __init__(self, path: str, message: str) -> None:
-        super().__init__(f"Config is invalid: '{path}'\n\n{message}")
+        super().__init__(f'Invalid config: {path}\n\n{message}')
 
     @classmethod
     def from_pydantic(cls, path: str, exception: pd.ValidationError) -> Self:
@@ -47,7 +47,7 @@ class InvalidConfigError(ConfigError):
             loc = err['loc'][0]
             inp = err['input']
             msg = err['msg'].lstrip('Assertion failed, ')
-            messages.append(f"{loc}\n    input: '{inp}'\n    error: {msg}")
+            messages.append(f'{loc}\n    input: {inp}\n    error: {msg}')
 
         return cls(path, '\n\n'.join(messages))
 
