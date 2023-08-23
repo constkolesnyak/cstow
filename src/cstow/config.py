@@ -8,9 +8,15 @@ from typing import Annotated, Iterator, Self
 import pydantic as pd
 from path import Path
 
-from cstow.command import COMMAND_TEMPLATE_DEFAULT, CmdVars
+from cstow.command import CmdVars
 
 _CONFIG_PATH_ENV_VAR = 'CSTOW_CONFIG_PATH'
+
+_CMD_TEMPLATE_DEFAULT = Template(
+    "stow --${} --no-folding --verbose -t ${} -d ${} . ".format(*CmdVars.fields())
+    + "2>&1 | grep -v -e '^BUG' -e '^WARN'"
+)
+_ROOT_DIR_DEFAULT = Path('/')
 
 
 class ConfigError(Exception):
@@ -69,8 +75,8 @@ TarsDirs = dict[DirectoryPath, list[DirectoryPath]]
 
 
 class Config(pd.BaseModel, extra='forbid'):
-    cmd_template: CmdTemplate = Template(COMMAND_TEMPLATE_DEFAULT)  # type: ignore
-    root_dir: DirectoryPath = '/'  # type: ignore
+    cmd_template: CmdTemplate = _CMD_TEMPLATE_DEFAULT  # type: ignore
+    root_dir: DirectoryPath = _ROOT_DIR_DEFAULT  # type: ignore
     targets_dirs: TarsDirs
 
     @pd.field_validator('targets_dirs', mode='before')

@@ -39,8 +39,3 @@ class CmdVars:
         return template.substitute(
             **{field: shlex.quote(str(val)) for field, val in vars(self).items()}
         )
-
-
-COMMAND_TEMPLATE_DEFAULT: str = (
-    "stow --${} --no-folding --verbose -t ${} -d ${} . 2>&1 | grep -v -e '^BUG' -e '^WARN'"
-).format(*CmdVars.fields())
