@@ -27,10 +27,10 @@ def get_configs(glob: str) -> list[str]:
 def test_good_configs(good_config: Path) -> None:
     os.environ[_CONFIG_PATH_ENV_VAR] = CONFIGS / good_config
 
-    TARGET_SYMLINK.remove_p()
-    print('\n')
-    _cli(CmdAction.STOW)
+    _cli(CmdAction.DELETE)
+    assert not TARGET_SYMLINK.exists()
 
+    _cli(CmdAction.STOW)
     assert TARGET_SYMLINK.islink() and TARGET_SYMLINK.readlinkabs() == DIR_FILE
 
 
