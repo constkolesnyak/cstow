@@ -10,10 +10,6 @@ from path import Path
 
 from cstow.command import COMMAND_TEMPLATE_DEFAULT, CmdVars
 
-TarsDirsStr = dict[str, list[str]]
-TarsDirsPath = dict[Path, list[Path]]
-
-
 _CONFIG_PATH_ENV_VAR = 'CSTOW_CONFIG_PATH'
 
 
