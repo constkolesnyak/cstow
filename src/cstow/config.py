@@ -69,7 +69,6 @@ def _expand(path: str) -> Path:
 
 CmdTemplate = Annotated[str, pd.AfterValidator(_validate_cmd_template)]
 DirectoryPath = Annotated[pd.DirectoryPath, pd.BeforeValidator(_expand)]
-RawTarsDirs = dict[str, list[str]]
 TarsDirs = dict[DirectoryPath, list[DirectoryPath]]
 
 
@@ -80,7 +79,9 @@ class Config(pd.BaseModel, extra='forbid'):
 
     @pd.field_validator('targets_dirs', mode='before')
     @classmethod
-    def _(cls, targets_dirs: RawTarsDirs, info: pd.FieldValidationInfo) -> RawTarsDirs:
+    def _(
+        cls, targets_dirs: dict[str, list[str]], info: pd.FieldValidationInfo
+    ) -> dict[str, list[Path]]:
         targets_dirs = copy.deepcopy(targets_dirs)
 
         assert 'root_dir' in info.data, "'root_dir' is invalid"
@@ -91,7 +92,7 @@ class Config(pd.BaseModel, extra='forbid'):
             assert isinstance(dirs, list), "'dirs' must be an array"
             targets_dirs[target] = [root_dir / _expand(dir_) for dir_ in dirs]
 
-        return targets_dirs
+        return targets_dirs  # type: ignore
 
     @classmethod
     def from_env_var(cls, env_var: str = _CONFIG_PATH_ENV_VAR) -> Self:
