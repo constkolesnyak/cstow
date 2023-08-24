@@ -37,6 +37,6 @@ def stow(action: CmdAction, config: Config, view: View, run: Run = _run) -> None
         view.show_dir(Path(dir_))
 
         cmd: str = CmdVars(action, target, dir_).cmd(config.cmd_template)  # type: ignore
-        proc: Proc = run(cmd)  # todo exceptions
+        proc: Proc = run(cmd)
 
         view.show_proc(proc)
