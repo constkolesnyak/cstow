@@ -12,16 +12,31 @@ Run = Callable[[str], Proc]
 
 
 def _run(cmd: str) -> Proc:
+    '''
+    Run a command in the shell.
+
+    Raises:
+        OSError: If the shell is not found.
+    '''
     return subprocess.run(args=[cmd], shell=True, capture_output=True)
 
 
 def stow(action: CmdAction, config: Config, view: View, run: Run = _run) -> None:
-    view.handle_action(action)
+    '''
+    Commit an action on targets and dirs from a config, show the output using a view.
+
+    Args:
+        action: A GNU Stow Action.
+        config: A user config.
+        view: A view.
+        run: A Callable to run GNU Stow commands. Defaults to _run.
+    '''
+    view.show_action(action)
 
     for target, dir_ in config.each_target_and_dir():
-        view.handle_dir(Path(dir_))
+        view.show_dir(Path(dir_))
 
         cmd: str = CmdVars(action, target, dir_).cmd(config.cmd_template)  # type: ignore
         proc: Proc = run(cmd)  # todo exceptions
 
-        view.handle_proc(proc)
+        view.show_proc(proc)

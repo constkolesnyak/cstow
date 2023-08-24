@@ -8,28 +8,32 @@ from cstow.command import CmdAction
 
 
 class View(ABC):
+    '''The view for showing information to the user.'''
+
     @abstractmethod
-    def handle_action(self, action: CmdAction) -> None:
+    def show_action(self, action: CmdAction) -> None:
         ''''''
 
     @abstractmethod
-    def handle_dir(self, dir_: Path) -> None:
+    def show_dir(self, dir_: Path) -> None:
         ''''''
 
     @abstractmethod
-    def handle_proc(self, proc: CompletedProcess[bytes]) -> None:
+    def show_proc(self, proc: CompletedProcess[bytes]) -> None:
         ''''''
 
 
 class PlainView(View):
-    def handle_action(self, action: CmdAction) -> None:
+    '''The view for printing plain text only.'''
+
+    def show_action(self, action: CmdAction) -> None:
         if action == CmdAction.NO:
             print(f'@@@@@ NO ACTION @@@@@\n')
 
-    def handle_dir(self, dir_: Path) -> None:
+    def show_dir(self, dir_: Path) -> None:
         print(f'### {dir_} ###\n')
 
-    def handle_proc(self, proc: CompletedProcess[bytes]) -> None:
+    def show_proc(self, proc: CompletedProcess[bytes]) -> None:
         if stdout := proc.stdout.decode():
             print(stdout)
         if stderr := proc.stderr.decode():
@@ -37,4 +41,6 @@ class PlainView(View):
 
 
 class RichView(View):
+    '''The view for printing rich text.'''
+
     ...

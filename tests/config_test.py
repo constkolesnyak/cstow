@@ -19,7 +19,7 @@ TARGET_SYMLINK: Path = TESTING_DATA / 'target' / 'file'
 
 
 def get_configs(glob: str) -> list[str]:
-    '''Get config filenames matching the glob'''
+    '''Get config filenames matching the glob.'''
     return [cfg.name for cfg in CONFIGS.glob(glob)]
 
 

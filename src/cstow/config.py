@@ -1,3 +1,13 @@
+'''
+Usage example:
+
+    try:
+        config: Config = Config.from_env_var()
+        ...
+    except ConfigError as e:
+        ...
+'''
+
 import copy
 import itertools
 import os
@@ -15,13 +25,13 @@ _CONFIG_PATH_ENV_VAR = 'CSTOW_CONFIG_PATH'
 
 _CMD_TEMPLATE_DEFAULT = Template(
     "stow --${} --no-folding --verbose -t ${} -d ${} . ".format(*CmdVars.fields())
-    + "2>&1 | grep -v -e '^BUG' -e '^WARN'"
+    + "2>&1 | grep -v -e '^BUG' -e '^WARN'"  # Clean output
 )
 _ROOT_DIR_DEFAULT = Path('/')
 
 
 class ConfigError(ABC, Exception):
-    ''''''
+    '''Any error with a user config.'''
 
 
 class ConfigEnvVarUnsetError(ConfigError):
@@ -42,6 +52,7 @@ class InvalidConfigError(ConfigError):
 
     @classmethod
     def from_pydantic(cls, path: str, exception: pd.ValidationError) -> Self:
+        '''Convert a Pydantic error message to an even more user-friendly one.'''
         messages: list[str] = []
 
         for err in exception.errors():
@@ -54,16 +65,17 @@ class InvalidConfigError(ConfigError):
 
 
 def _validate_cmd_template(template_str: str) -> Template:
-    template = Template(template_str)
+    '''Should only be used with Pydantic and typing.Annotated.'''
+    cmd_template = Template(template_str)
 
-    assert template.is_valid(), "Invalid syntax in 'cmd_template'"
-    assert set(template.get_identifiers()) == set(
+    assert cmd_template.is_valid(), "Invalid syntax in 'cmd_template'"
+    assert set(cmd_template.get_identifiers()) == set(
         CmdVars.fields()
     ), f"'cmd_template' must contain all of these vars and no others: " + ", ".join(
         CmdVars.fields()
     )
 
-    return template
+    return cmd_template
 
 
 def _expand(path: str) -> Path:
@@ -72,10 +84,22 @@ def _expand(path: str) -> Path:
 
 CmdTemplate = Annotated[str, pd.AfterValidator(_validate_cmd_template)]
 DirectoryPath = Annotated[pd.DirectoryPath, pd.BeforeValidator(_expand)]
-TarsDirs = dict[DirectoryPath, list[DirectoryPath]]
+TarsDirs = dict[DirectoryPath, list[pd.DirectoryPath]]
 
 
 class Config(pd.BaseModel, extra='forbid'):
+    '''
+    The user config validated by Pydantic.
+
+    Attributes:
+        cmd_template: A template for constructing GNU Stow commands.
+        root_dir: The root directory of source directories.
+        targets_dirs: A dictionary of target directories and associated source directories.
+
+    Raises:
+        pydantic.ValidationError: If the config is invalid.
+    '''
+
     cmd_template: CmdTemplate = _CMD_TEMPLATE_DEFAULT  # type: ignore
     root_dir: DirectoryPath = _ROOT_DIR_DEFAULT  # type: ignore
     targets_dirs: TarsDirs
@@ -85,6 +109,7 @@ class Config(pd.BaseModel, extra='forbid'):
     def _(
         cls, targets_dirs: dict[str, list[str]], info: pd.FieldValidationInfo
     ) -> dict[str, list[Path]]:
+        '''Expand dirs in targets_dirs and prefix them with the root_dir.'''
         targets_dirs = copy.deepcopy(targets_dirs)
 
         assert 'root_dir' in info.data, "'root_dir' is invalid"
@@ -99,10 +124,33 @@ class Config(pd.BaseModel, extra='forbid'):
 
     @classmethod
     def from_env_var(cls, env_var: str = _CONFIG_PATH_ENV_VAR) -> Self:
+        '''
+        Load config from a file provided by an environment variable.
+
+        Args:
+            env_var:
+                An environment variable pointing to a user config file.
+                Defaults to _CONFIG_PATH_ENV_VAR.
+
+        Raises:
+            ConfigEnvVarUnsetError: If the environment variable is unset.
+            ConfigNotFoundError: If the file is not found.
+            InvalidConfigError: If the config is invalid.
+        '''
         return cls.from_path(_env_var_to_path(env_var))
 
     @classmethod
     def from_path(cls, path: Path) -> Self:
+        '''
+        Load config from a file.
+
+        Args:
+            path: A path to a user config file.
+
+        Raises:
+            ConfigNotFoundError: If the file is not found.
+            InvalidConfigError: If the config is invalid.
+        '''
         try:
             return cls(**tomllib.loads(path.read_text()))
         except FileNotFoundError:
@@ -113,6 +161,12 @@ class Config(pd.BaseModel, extra='forbid'):
             raise InvalidConfigError.from_pydantic(path, e)
 
     def each_target_and_dir(self) -> Iterator[tuple[DirectoryPath, DirectoryPath]]:
+        '''
+        Iterate over targets_dirs.
+
+        Yields:
+            Every pair of a target directory and a source directory.
+        '''
         for target, dirs in self.targets_dirs.items():
             yield from itertools.product((target,), dirs)
 
