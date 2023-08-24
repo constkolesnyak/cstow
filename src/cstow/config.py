@@ -2,6 +2,7 @@ import copy
 import itertools
 import os
 import tomllib
+from abc import ABC
 from string import Template
 from typing import Annotated, Iterator, Self
 
@@ -19,7 +20,7 @@ _CMD_TEMPLATE_DEFAULT = Template(
 _ROOT_DIR_DEFAULT = Path('/')
 
 
-class ConfigError(Exception):
+class ConfigError(ABC, Exception):
     ''''''
 
 
