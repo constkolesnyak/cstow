@@ -1,7 +1,6 @@
 import os
 
 import pytest
-from dotenv import load_dotenv
 from path import Path
 
 from cstow.command import CmdAction
@@ -10,12 +9,12 @@ from cstow.config import Config, InvalidConfigError
 from cstow.main import _cli  # type: ignore
 from tests.testing_utils import pyt_print
 
-load_dotenv()
-
 TESTING_DATA: Path = Path(__file__).parent / 'testing_data'
 CONFIGS: Path = TESTING_DATA / 'configs'
 DIR_FILE: Path = TESTING_DATA / 'dir' / 'file'
 TARGET_SYMLINK: Path = TESTING_DATA / 'target' / 'file'
+
+os.environ['CSTOW_TESTING_DATA'] = TESTING_DATA
 
 
 def get_configs(glob: str) -> list[str]:
