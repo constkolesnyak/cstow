@@ -12,15 +12,15 @@ class View(ABC):
 
     @abstractmethod
     def show_action(self, action: CmdAction) -> None:
-        ''''''
+        raise NotImplementedError
 
     @abstractmethod
     def show_dir(self, dir_: Path) -> None:
-        ''''''
+        raise NotImplementedError
 
     @abstractmethod
     def show_proc(self, proc: CompletedProcess[bytes]) -> None:
-        ''''''
+        raise NotImplementedError
 
 
 class PlainView(View):
@@ -43,4 +43,11 @@ class PlainView(View):
 class RichView(View):
     '''The view for printing rich text.'''
 
-    ...
+    def show_action(self, action: CmdAction) -> None:
+        ...
+
+    def show_dir(self, dir_: Path) -> None:
+        ...
+
+    def show_proc(self, proc: CompletedProcess[bytes]) -> None:
+        ...
