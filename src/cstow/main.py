@@ -6,7 +6,10 @@ import fire  # type: ignore
 from cstow.command import CmdAction, InvalidCmdActionError
 from cstow.config import Config, ConfigError
 from cstow.stow import stow
-from cstow.view import PlainView
+from cstow.view import PlainView, RichView, View
+
+_ACTION_DEFAULT = CmdAction.NO
+
 
 
 def _error(*args: Any, **kwargs: Any) -> NoReturn:
@@ -16,11 +19,13 @@ def _error(*args: Any, **kwargs: Any) -> NoReturn:
     exit(1)
 
 
-def _cli(action: CmdAction = CmdAction.NO) -> None:
-    ''''''  # todo 'help' docstring
+def _cli(action: str = _ACTION_DEFAULT, /, *, plain: bool = False) -> None:
+    '''Use with Fire.'''
+    view: View = PlainView() if plain else RichView()
+
     try:
         config: Config = Config.from_env_var()
-        stow(action, config, PlainView())
+        stow(CmdAction(action), config, view)
     except (ConfigError, InvalidCmdActionError) as e:
         _error(e)
 
