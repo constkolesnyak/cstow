@@ -27,8 +27,7 @@ class PlainView(View):
     '''The view for printing plain text only.'''
 
     def show_action(self, action: CmdAction) -> None:
-        if action == CmdAction.NO:
-            print(f'@@@@@ NO ACTION @@@@@\n')
+        print(f'@@@@@ {_action_to_title(action)} @@@@@\n')
 
     def show_dir(self, dir_: Path) -> None:
         print(f'### {dir_} ###\n')
@@ -51,3 +50,7 @@ class RichView(View):
 
     def show_proc(self, proc: CompletedProcess[bytes]) -> None:
         ...
+
+
+def _action_to_title(action: CmdAction) -> str:
+    return action.replace(CmdAction.NO, 'dry run').upper()
