@@ -10,7 +10,7 @@ from cstow.view import PlainView
 
 
 def _error(*args: Any, **kwargs: Any) -> NoReturn:
-    '''Print the error(s) and exit.'''
+    '''Print the error(s) and exit with 1.'''
     print('ERROR:\n', file=sys.stderr)
     print(*args, file=sys.stderr, **kwargs)
     exit(1)

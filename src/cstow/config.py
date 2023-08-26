@@ -65,7 +65,7 @@ class InvalidConfigError(ConfigError):
 
 
 def _validate_cmd_template(template_str: str) -> Template:
-    '''Should only be used with Pydantic and typing.Annotated.'''
+    '''Use with Pydantic and typing.Annotated.'''
     cmd_template = Template(template_str)
 
     assert cmd_template.is_valid(), "Invalid syntax in 'cmd_template'"
@@ -125,7 +125,7 @@ class Config(pd.BaseModel, extra='forbid'):
     @classmethod
     def from_env_var(cls, env_var: str = _CONFIG_PATH_ENV_VAR) -> Self:
         '''
-        Load config from a file provided by an environment variable.
+        Load a user config from a file provided by an environment variable.
 
         Args:
             env_var:
@@ -142,7 +142,7 @@ class Config(pd.BaseModel, extra='forbid'):
     @classmethod
     def from_path(cls, path: Path) -> Self:
         '''
-        Load config from a file.
+        Load a user config from a file.
 
         Args:
             path: A path to a user config file.
