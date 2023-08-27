@@ -35,7 +35,7 @@ def str_to_action(action: str) -> CmdAction:
     raise InvalidCmdActionError(action)
 
 
-@dc.dataclass
+@dc.dataclass(frozen=True)
 class CmdVars:
     '''
     Variables for constructing GNU Stow commands from a template.
