@@ -30,9 +30,6 @@ def stow(action: CmdAction, config: Config, view: View, run: Run = _run) -> None
         config: A user config.
         view: A view.
         run: A Callable to run GNU Stow commands. Defaults to _run.
-
-    Raises:
-        InvalidCmdActionError: If the GNU Stow action is invalid.
     '''
     view.show_action(action)
 

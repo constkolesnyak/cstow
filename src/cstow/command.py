@@ -23,6 +23,18 @@ class InvalidCmdActionError(Exception):
         )
 
 
+def str_to_action(action: str) -> CmdAction:
+    '''
+    Validate a GNU Stow action.
+
+    Raises:
+        InvalidCmdActionError: If the GNU Stow action is invalid.
+    '''
+    if action in list(CmdAction):
+        return CmdAction(action)
+    raise InvalidCmdActionError(action)
+
+
 @dc.dataclass
 class CmdVars:
     '''
@@ -32,19 +44,11 @@ class CmdVars:
         action: A GNU Stow action.
         target: A target directory.
         dir: A source directory.
-
-    Raises:
-        InvalidCmdActionError: If the GNU Stow action is invalid.
     '''
 
     action: CmdAction
     target: Path
     dir: Path
-
-    def __post_init__(self) -> None:
-        '''Validate the GNU Stow action.'''
-        if self.action not in list(CmdAction):
-            raise InvalidCmdActionError(self.action)
 
     @classmethod
     def fields(cls) -> Iterator[str]:

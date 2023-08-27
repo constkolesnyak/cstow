@@ -3,7 +3,7 @@ from typing import Any, NoReturn
 
 import fire  # type: ignore
 
-from cstow.command import CmdAction, InvalidCmdActionError
+from cstow.command import CmdAction, InvalidCmdActionError, str_to_action
 from cstow.config import Config, ConfigError
 from cstow.stow import stow
 from cstow.view import PlainView, RichView, View
@@ -22,7 +22,7 @@ def _cli(action: str = 'no', *, plain: bool = False) -> None:
 
     try:
         config: Config = Config.from_env_var()
-        stow(CmdAction(action), config, view)
+        stow(str_to_action(action), config, view)
     except (ConfigError, InvalidCmdActionError) as e:
         _error(e)
 
