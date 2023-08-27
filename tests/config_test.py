@@ -32,7 +32,7 @@ def get_configs(glob: str) -> list[str]:
 def test_good_configs(good_config: Path) -> None:
     os.environ[_CONFIG_PATH_ENV_VAR] = CONFIGS / good_config
 
-    _cli(CmdAction.DELETE)
+    _cli(CmdAction.DELETE, plain=True)
     assert not TARGET_SYMLINK.exists()
 
     _cli(CmdAction.STOW)

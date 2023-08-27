@@ -31,6 +31,8 @@ filterwarnings = ["ignore::DeprecationWarning"]
 [tool.coverage.run]
 omit = ["tests/*", "__init__.py"]
 
+[tool.coverage.report]
+exclude_also = ["raise NotImplementedError"]
 
 [build-system]
 requires = ["poetry-core"]
