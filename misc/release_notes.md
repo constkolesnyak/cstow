@@ -1,11 +1,12 @@
 ### Done
 
+- [x] Docstrings
+- [x] Nice UI
+- [x] Code coverage: 91% -> 96%
+
 ### To Do
 
-- [ ] More tests
-- [ ] Nice UI
 - [ ] README
-- [ ] Docstrings
 
 ---
 
