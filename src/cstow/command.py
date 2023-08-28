@@ -43,7 +43,7 @@ class CmdVars:
     Attributes:
         action: A GNU Stow action.
         target: A target directory.
-        dir: A source directory.
+        dir: A stow directory.
     '''
 
     action: CmdAction

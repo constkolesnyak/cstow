@@ -93,8 +93,8 @@ class Config(pd.BaseModel, extra='forbid'):
 
     Attributes:
         cmd_template: A template for constructing GNU Stow commands.
-        root_dir: The root directory of source directories.
-        targets_dirs: A dictionary of target directories and associated source directories.
+        root_dir: The root directory of stow directories.
+        targets_dirs: A dictionary of target directories and associated stow directories.
 
     Raises:
         pydantic.ValidationError: If the config is invalid.
@@ -165,7 +165,7 @@ class Config(pd.BaseModel, extra='forbid'):
         Iterate over targets_dirs.
 
         Yields:
-            Every pair of a target directory and a source directory.
+            Every pair of a target directory and a stow directory.
         '''
         for target, dirs in self.targets_dirs.items():
             yield from itertools.product((target,), dirs)
