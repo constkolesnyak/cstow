@@ -28,7 +28,7 @@ def get_configs(glob: str) -> list[str]:
 
 
 @pytest.mark.smoke
-@pytest.mark.parametrize("good_config", get_configs('good_*'))
+@pytest.mark.parametrize('good_config', get_configs('good_*'))
 def test_good_configs(good_config: Path) -> None:
     os.environ[_CONFIG_PATH_ENV_VAR] = CONFIGS / good_config
 
@@ -39,7 +39,7 @@ def test_good_configs(good_config: Path) -> None:
     assert TARGET_SYMLINK.islink() and TARGET_SYMLINK.readlinkabs() == DIR_FILE
 
 
-@pytest.mark.parametrize("bad_config", get_configs('bad_*'))
+@pytest.mark.parametrize('bad_config', get_configs('bad_*'))
 def test_bad_configs(bad_config: Path) -> None:
     os.environ[_CONFIG_PATH_ENV_VAR] = CONFIGS / bad_config
 

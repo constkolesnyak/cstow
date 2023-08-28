@@ -44,10 +44,10 @@ class PlainView(View):
 
 
 class _StowHighlighter(RegexHighlighter):
-    """The highlighter for GNU Stow output."""
+    '''The highlighter for GNU Stow output.'''
 
     highlights = [r'(?P<linking>(UN)?LINK)', r'(?P<linking>=>)']
-    theme = Theme({"linking": "bold spring_green4"})
+    theme = Theme({'linking': 'bold spring_green4'})
 
 
 class RichView(View):
@@ -55,7 +55,7 @@ class RichView(View):
 
     def __init__(self) -> None:
         self.console = Console(highlighter=_StowHighlighter(), theme=_StowHighlighter.theme)
-        self.error_console = Console(stderr=True, style="red")
+        self.error_console = Console(stderr=True, style='red')
 
     def show_action(self, action: CmdAction) -> None:
         surround = '[deep_pink3]' + '@' * 15
@@ -67,7 +67,7 @@ class RichView(View):
 
     def show_dir(self, dir_: Path) -> None:
         self.console.print(
-            f"[cyan]{dir_.parent}{os.path.sep}[yellow bold]{dir_.name}\n", justify='center'
+            f'[cyan]{dir_.parent}{os.path.sep}[yellow bold]{dir_.name}\n', justify='center'
         )
 
     def show_proc(self, proc: CompletedProcess[bytes]) -> None:

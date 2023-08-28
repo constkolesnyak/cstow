@@ -19,7 +19,7 @@ class CmdAction(StrEnum):
 class InvalidCmdActionError(Exception):
     def __init__(self, action: str) -> None:
         super().__init__(
-            f"Action '{action}' is invalid\nUse one of these: " + ', '.join(CmdAction)
+            f"Action '{action}' is invalid\nUse one of these: " + ", ".join(CmdAction)
         )
 
 

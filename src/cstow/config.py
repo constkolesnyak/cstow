@@ -24,7 +24,7 @@ from cstow.command import CmdVars
 _CONFIG_PATH_ENV_VAR = 'CSTOW_CONFIG_PATH'
 
 _CMD_TEMPLATE_DEFAULT = Template(
-    "stow --${} --no-folding --verbose -t ${} -d ${} . ".format(*CmdVars.fields())
+    'stow --${} --no-folding --verbose -t ${} -d ${} . '.format(*CmdVars.fields())
     + "2>&1 | grep -v -e '^BUG' -e '^WARN'"  # Clean output
 )
 _ROOT_DIR_DEFAULT = Path('/')
