@@ -1,12 +1,6 @@
-### Done
-
-- [x] Docstrings
-- [x] Nice UI
-- [x] Code coverage: 91% -> 96%
-
-### To Do
-
-- [ ] README
+- [x] Demo GIF
+- [x] README
+- [x] The first major release
 
 ---
 
