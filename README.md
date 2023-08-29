@@ -64,8 +64,6 @@ but every variable must be used at least once.
 
 Cstow escapes variables so don't even try shell-injecting yourself!
 
-#### Variables
-
 | Variable | Description                                       |
 | -------- | ------------------------------------------------- |
 | action   | A GNU Stow action ([no, stow, restow, delete][1]) |
@@ -87,11 +85,11 @@ Cstow escapes variables so don't even try shell-injecting yourself!
 
     # Run an action
     cstow               # Default action is 'no'
-    cstow no            # Action is a positional argument
-    cstow -a no         # But flags also work
+    cstow delete        # Action is a positional argument
+    cstow -a restow     # But flags also work
     cstow --action no
 
     # Print plain text
-    cstow stow -p
-    cstow restow --plain
+    cstow stow --plain
+    cstow restow -p
     cstow -p -a delete
