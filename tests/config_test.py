@@ -12,7 +12,7 @@ from cstow.config import (
     InvalidConfigError,
 )
 from cstow.main import _cli  # type: ignore
-from tests.testing_utils import pyt_print
+from tests.testing_utils import pytest_print
 
 TESTING_DATA: Path = Path(__file__).parent / 'testing_data'
 CONFIGS: Path = TESTING_DATA / 'configs'
@@ -45,7 +45,7 @@ def test_bad_configs(bad_config: Path) -> None:
 
     with pytest.raises(InvalidConfigError) as exc:
         Config.from_env_var()
-    pyt_print(exc.value)
+    pytest_print(exc.value)
 
 
 def test_bad_env_var() -> None:
@@ -53,7 +53,7 @@ def test_bad_env_var() -> None:
 
     with pytest.raises(ConfigNotFoundError) as exc:
         Config.from_env_var()
-    pyt_print(exc.value)
+    pytest_print(exc.value)
 
 
 def test_unset_env_var() -> None:
@@ -61,4 +61,4 @@ def test_unset_env_var() -> None:
 
     with pytest.raises(ConfigEnvVarUnsetError) as exc:
         Config.from_env_var()
-    pyt_print(exc.value)
+    pytest_print(exc.value)
