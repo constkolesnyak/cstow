@@ -12,7 +12,7 @@ from cstow.config import (
     InvalidConfigError,
 )
 from cstow.main import _cli  # type: ignore
-from tests.testing_utils import pytest_print
+from tests.utils import pytest_print
 
 TESTING_DATA: Path = Path(__file__).parent / 'testing_data'
 CONFIGS: Path = TESTING_DATA / 'configs'
