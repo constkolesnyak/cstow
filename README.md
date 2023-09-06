@@ -59,10 +59,7 @@ If you don't set `root_dir`, use absolute paths in `targets_dirs`.
 
 ### cmd_template
 
-You can set it to any shell command
-that contains every placeholder from the table below.
-
-Cstow escapes placeholders so don't even try shell-injecting yourself!
+You can set it to any shell command that contains every placeholder.
 
 | Placeholder | Description                                       |
 | ----------- | ------------------------------------------------- |
