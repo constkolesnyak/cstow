@@ -36,9 +36,9 @@ def str_to_action(action: str) -> CmdAction:
 
 
 @dc.dataclass(frozen=True)
-class CmdVars:
+class CmdPlaceholders:
     '''
-    Variables for constructing GNU Stow commands from a template.
+    Placeholders for constructing GNU Stow commands from a template.
 
     Attributes:
         action: A GNU Stow action.

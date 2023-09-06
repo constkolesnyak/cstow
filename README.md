@@ -60,15 +60,15 @@ If you don't set `root_dir`, use absolute paths in `targets_dirs`.
 ### cmd_template
 
 You can set it to any shell command
-that contains every variable from the table below.
+that contains every placeholder from the table below.
 
-Cstow escapes variables so don't even try shell-injecting yourself!
+Cstow escapes placeholders so don't even try shell-injecting yourself!
 
-| Variable | Description                                       |
-| -------- | ------------------------------------------------- |
-| action   | A GNU Stow action ([no, stow, restow, delete][1]) |
-| target   | A target directory                                |
-| dir      | A stow directory for the target                                  |
+| Placeholder | Description                                       |
+| ----------- | ------------------------------------------------- |
+| action      | A GNU Stow action ([no, stow, restow, delete][1]) |
+| target      | A target directory                                |
+| dir         | A stow directory for the target                   |
 
 [1]: https://www.gnu.org/software/stow/manual/stow.html#Invoking-Stow
 

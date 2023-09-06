@@ -3,7 +3,7 @@ from typing import Callable
 
 from path import Path
 
-from cstow.command import CmdAction, CmdVars
+from cstow.command import CmdAction, CmdPlaceholders
 from cstow.config import Config
 from cstow.view import View
 
@@ -36,7 +36,7 @@ def stow(action: CmdAction, config: Config, view: View, run: Run = _run) -> None
     for target, dir_ in config.each_target_and_dir():
         view.show_dir(Path(dir_))
 
-        cmd: str = CmdVars(action, target, dir_).cmd(config.cmd_template)  # type: ignore
+        cmd: str = CmdPlaceholders(action, target, dir_).cmd(config.cmd_template)  # type: ignore
         proc: Proc = run(cmd)
 
         view.show_proc(proc)

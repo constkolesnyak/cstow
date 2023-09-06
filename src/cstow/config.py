@@ -19,12 +19,14 @@ from typing import Annotated, Iterator, Self
 import pydantic as pd
 from path import Path
 
-from cstow.command import CmdVars
+from cstow.command import CmdPlaceholders
 
 _CONFIG_PATH_ENV_VAR = 'CSTOW_CONFIG_PATH'
 
 _CMD_TEMPLATE_DEFAULT = Template(
-    'stow --${} --no-folding --verbose --target=${} --dir=${} . '.format(*CmdVars.fields())
+    'stow --${} --no-folding --verbose --target=${} --dir=${} . '.format(
+        *CmdPlaceholders.fields()
+    )
     + '2>&1 | grep --invert-match --regexp="^BUG" --regexp="^WARN"'  # Clean output
 )
 _ROOT_DIR_DEFAULT = Path('/')
@@ -70,9 +72,9 @@ def _validate_cmd_template(template_str: str) -> Template:
 
     assert cmd_template.is_valid(), "Invalid syntax in 'cmd_template'"
     assert set(cmd_template.get_identifiers()) == set(
-        CmdVars.fields()
-    ), f"'cmd_template' must contain all of these vars and no others: " + ", ".join(
-        CmdVars.fields()
+        CmdPlaceholders.fields()
+    ), f"'cmd_template' must contain all of these placeholders and no others: " + ", ".join(
+        CmdPlaceholders.fields()
     )
 
     return cmd_template
