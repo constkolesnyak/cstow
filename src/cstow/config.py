@@ -4,7 +4,7 @@ Usage example:
     try:
         config: Config = Config.from_env_var()
         ...
-    except ConfigError as e:
+    except ConfigError as exc:
         ...
 """
 
@@ -163,12 +163,12 @@ class Config(pd.BaseModel, extra='forbid'):
         """
         try:
             return cls(**tomllib.loads(path.read_text()))
-        except FileNotFoundError as e:
-            raise ConfigNotFoundError(path) from e
-        except tomllib.TOMLDecodeError as e:
-            raise InvalidConfigError(path, str(e)) from e
-        except pd.ValidationError as e:
-            raise InvalidConfigError.from_pydantic(path, e) from e
+        except FileNotFoundError as exc:
+            raise ConfigNotFoundError(path) from exc
+        except tomllib.TOMLDecodeError as exc:
+            raise InvalidConfigError(path, str(exc)) from exc
+        except pd.ValidationError as exc:
+            raise InvalidConfigError.from_pydantic(path, exc) from exc
 
     def each_target_and_dir(self) -> Iterator[tuple[DirectoryPath, DirectoryPath]]:
         """

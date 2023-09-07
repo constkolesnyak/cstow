@@ -23,8 +23,8 @@ def _cli(action: str = 'no', *, plain: bool = False) -> None:
     try:
         config: Config = Config.from_env_var()
         stow(str_to_action(action), config, view)
-    except (ConfigError, InvalidCmdActionError) as e:
-        _error(e)
+    except (ConfigError, InvalidCmdActionError) as exc:
+        _error(exc)
 
 
 def main() -> None:
