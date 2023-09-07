@@ -60,7 +60,7 @@ class InvalidConfigError(ConfigError):
         for err in exception.errors():
             loc = err['loc'][0]
             inp = err['input']
-            msg = err['msg'].lstrip('Assertion failed, ')
+            msg = err['msg'].replace('Assertion failed, ', '')
             messages.append(f'{loc}\n    input: {inp}\n    error: {msg}')
 
         return cls(path, '\n\n'.join(messages))
@@ -80,12 +80,14 @@ def _validate_cmd_template(template_str: str) -> Template:
     return cmd_template
 
 
-def _expand(path: str) -> Path:
+def _expand_path(path: str) -> Path:
+    """Use with Pydantic."""
+    assert path, 'Path must not be empty'
     return Path(path).expand()
 
 
 CmdTemplate = Annotated[str, pd.AfterValidator(_validate_cmd_template)]
-DirectoryPath = Annotated[pd.DirectoryPath, pd.BeforeValidator(_expand)]
+DirectoryPath = Annotated[pd.DirectoryPath, pd.BeforeValidator(_expand_path)]
 TarsDirs = dict[DirectoryPath, list[pd.DirectoryPath]]
 
 
@@ -111,7 +113,11 @@ class Config(pd.BaseModel, extra='forbid'):
     def _(
         cls, targets_dirs: dict[str, list[str]], info: pd.FieldValidationInfo
     ) -> dict[str, list[Path]]:
-        """Expand dirs in targets_dirs and prefix them with the root_dir."""
+        """
+        Expand dirs in targets_dirs and prefix them with the root_dir.
+
+        Also do some validation.
+        """
         targets_dirs = copy.deepcopy(targets_dirs)
 
         assert 'root_dir' in info.data, "'root_dir' is invalid"
@@ -119,8 +125,10 @@ class Config(pd.BaseModel, extra='forbid'):
 
         assert isinstance(targets_dirs, dict), "'targets_dirs' must be a table"
         for target, dirs in targets_dirs.items():
+            assert target != '.', "target must not be '.'"
             assert isinstance(dirs, list), "'dirs' must be an array"
-            targets_dirs[target] = [root_dir / _expand(dir_) for dir_ in dirs]
+            assert dirs, "'dirs' must not be empty"
+            targets_dirs[target] = [root_dir / _expand_path(dir_) for dir_ in dirs]
 
         return targets_dirs  # type: ignore
 
