@@ -1,4 +1,4 @@
-'''
+"""
 Usage example:
 
     try:
@@ -6,7 +6,7 @@ Usage example:
         ...
     except ConfigError as e:
         ...
-'''
+"""
 
 import copy
 import itertools
@@ -33,7 +33,7 @@ _ROOT_DIR_DEFAULT = Path('/')
 
 
 class ConfigError(ABC, Exception):
-    '''Any error with a user config.'''
+    """Any error with a user config."""
 
 
 class ConfigEnvVarUnsetError(ConfigError):
@@ -54,7 +54,7 @@ class InvalidConfigError(ConfigError):
 
     @classmethod
     def from_pydantic(cls, path: str, exception: pd.ValidationError) -> Self:
-        '''Convert a Pydantic error message to an even more user-friendly one.'''
+        """Convert a Pydantic error message to an even more user-friendly one."""
         messages: list[str] = []
 
         for err in exception.errors():
@@ -67,7 +67,7 @@ class InvalidConfigError(ConfigError):
 
 
 def _validate_cmd_template(template_str: str) -> Template:
-    '''Use with Pydantic and typing.Annotated.'''
+    """Use with Pydantic and typing.Annotated."""
     cmd_template = Template(template_str)
 
     assert cmd_template.is_valid(), "Invalid syntax in 'cmd_template'"
@@ -90,7 +90,7 @@ TarsDirs = dict[DirectoryPath, list[pd.DirectoryPath]]
 
 
 class Config(pd.BaseModel, extra='forbid'):
-    '''
+    """
     The user config validated by Pydantic.
 
     Attributes:
@@ -100,7 +100,7 @@ class Config(pd.BaseModel, extra='forbid'):
 
     Raises:
         pydantic.ValidationError: If the config is invalid.
-    '''
+    """
 
     cmd_template: CmdTemplate = _CMD_TEMPLATE_DEFAULT  # type: ignore
     root_dir: DirectoryPath = _ROOT_DIR_DEFAULT  # type: ignore
@@ -111,7 +111,7 @@ class Config(pd.BaseModel, extra='forbid'):
     def _(
         cls, targets_dirs: dict[str, list[str]], info: pd.FieldValidationInfo
     ) -> dict[str, list[Path]]:
-        '''Expand dirs in targets_dirs and prefix them with the root_dir.'''
+        """Expand dirs in targets_dirs and prefix them with the root_dir."""
         targets_dirs = copy.deepcopy(targets_dirs)
 
         assert 'root_dir' in info.data, "'root_dir' is invalid"
@@ -126,7 +126,7 @@ class Config(pd.BaseModel, extra='forbid'):
 
     @classmethod
     def from_env_var(cls, env_var: str = _CONFIG_PATH_ENV_VAR) -> Self:
-        '''
+        """
         Load a user config from a file provided by an environment variable.
 
         Args:
@@ -138,12 +138,12 @@ class Config(pd.BaseModel, extra='forbid'):
             ConfigEnvVarUnsetError: If the environment variable is unset.
             ConfigNotFoundError: If the file is not found.
             InvalidConfigError: If the config is invalid.
-        '''
+        """
         return cls.from_path(_env_var_to_path(env_var))
 
     @classmethod
     def from_path(cls, path: Path) -> Self:
-        '''
+        """
         Load a user config from a file.
 
         Args:
@@ -152,7 +152,7 @@ class Config(pd.BaseModel, extra='forbid'):
         Raises:
             ConfigNotFoundError: If the file is not found.
             InvalidConfigError: If the config is invalid.
-        '''
+        """
         try:
             return cls(**tomllib.loads(path.read_text()))
         except FileNotFoundError:
@@ -163,12 +163,12 @@ class Config(pd.BaseModel, extra='forbid'):
             raise InvalidConfigError.from_pydantic(path, e)
 
     def each_target_and_dir(self) -> Iterator[tuple[DirectoryPath, DirectoryPath]]:
-        '''
+        """
         Iterate over targets_dirs.
 
         Yields:
             Every pair of a target directory and a stow directory.
-        '''
+        """
         for target, dirs in self.targets_dirs.items():
             yield from itertools.product((target,), dirs)
 

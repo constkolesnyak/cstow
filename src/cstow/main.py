@@ -10,14 +10,14 @@ from cstow.view import PlainView, RichView, View
 
 
 def _error(*args: Any, **kwargs: Any) -> NoReturn:
-    '''Print the error(s) and exit with 1.'''
+    """Print the error(s) and exit with 1."""
     print('ERROR:\n', file=sys.stderr)
     print(*args, file=sys.stderr, **kwargs)
     exit(1)
 
 
 def _cli(action: str = 'no', *, plain: bool = False) -> None:
-    '''Use with Fire.'''
+    """Use with Fire."""
     view: View = PlainView() if plain else RichView()
 
     try:
@@ -28,18 +28,18 @@ def _cli(action: str = 'no', *, plain: bool = False) -> None:
 
 
 def main() -> None:
-    '''
+    """
     The entry point.
 
     Customize the help page, fire up the fire.Fire.
-    '''
+    """
 
-    _cli.__doc__ = f'''
+    _cli.__doc__ = f"""
     https://github.com/constkolesnyak/cstow/blob/main/README.md
 
     Args:
         action: Actions: {', '.join(CmdAction)}. 
         plain: Print plain text only. 
-    '''
+    """
 
     fire.Fire(_cli)  # type: ignore

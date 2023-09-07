@@ -12,7 +12,7 @@ from cstow.command import CmdAction
 
 
 class View(ABC):
-    '''The view for showing information to the user.'''
+    """The view for showing information to the user."""
 
     @abstractmethod
     def show_action(self, action: CmdAction) -> None:
@@ -28,7 +28,7 @@ class View(ABC):
 
 
 class PlainView(View):
-    '''The view for printing plain text only.'''
+    """The view for printing plain text only."""
 
     def show_action(self, action: CmdAction) -> None:
         print(f'@@@@@ {_action_to_title(action)} @@@@@\n')
@@ -44,14 +44,14 @@ class PlainView(View):
 
 
 class _StowHighlighter(RegexHighlighter):
-    '''The highlighter for GNU Stow output.'''
+    """The highlighter for GNU Stow output."""
 
     highlights = [r'(?P<linking>(UN)?LINK)', r'(?P<linking>=>)']
     theme = Theme({'linking': 'bold spring_green4'})
 
 
 class RichView(View):
-    '''The view for printing rich text.'''
+    """The view for printing rich text."""
 
     def __init__(self) -> None:
         self.console = Console(highlighter=_StowHighlighter(), theme=_StowHighlighter.theme)

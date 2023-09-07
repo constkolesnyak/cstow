@@ -8,7 +8,7 @@ from path import Path
 
 
 class CmdAction(StrEnum):
-    '''GNU Stow actions.'''
+    """GNU Stow actions."""
 
     NO = auto()
     STOW = auto()
@@ -24,12 +24,12 @@ class InvalidCmdActionError(Exception):
 
 
 def str_to_action(action: str) -> CmdAction:
-    '''
+    """
     Validate a GNU Stow action.
 
     Raises:
         InvalidCmdActionError: If the GNU Stow action is invalid.
-    '''
+    """
     if action in list(CmdAction):
         return CmdAction(action)
     raise InvalidCmdActionError(action)
@@ -37,14 +37,14 @@ def str_to_action(action: str) -> CmdAction:
 
 @dc.dataclass(frozen=True)
 class CmdPlaceholders:
-    '''
+    """
     Placeholders for constructing GNU Stow commands from a template.
 
     Attributes:
         action: A GNU Stow action.
         target: A target directory.
         dir: A stow directory.
-    '''
+    """
 
     action: CmdAction
     target: Path
@@ -55,7 +55,7 @@ class CmdPlaceholders:
         return (field.name for field in dc.fields(cls))
 
     def cmd(self, template: Template) -> str:
-        '''Construct a GNU Stow command from a template.'''
+        """Construct a GNU Stow command from a template."""
         return template.substitute(
             **{field: shlex.quote(str(val)) for field, val in vars(self).items()}
         )
