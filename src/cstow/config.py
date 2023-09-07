@@ -155,12 +155,12 @@ class Config(pd.BaseModel, extra='forbid'):
         """
         try:
             return cls(**tomllib.loads(path.read_text()))
-        except FileNotFoundError:
-            raise ConfigNotFoundError(path)
+        except FileNotFoundError as e:
+            raise ConfigNotFoundError(path) from e
         except tomllib.TOMLDecodeError as e:
-            raise InvalidConfigError(path, str(e))
+            raise InvalidConfigError(path, str(e)) from e
         except pd.ValidationError as e:
-            raise InvalidConfigError.from_pydantic(path, e)
+            raise InvalidConfigError.from_pydantic(path, e) from e
 
     def each_target_and_dir(self) -> Iterator[tuple[DirectoryPath, DirectoryPath]]:
         """
