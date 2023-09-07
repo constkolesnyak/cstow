@@ -125,7 +125,7 @@ class Config(pd.BaseModel, extra='forbid'):
 
         assert isinstance(targets_dirs, dict), "'targets_dirs' must be a table"
         for target, dirs in targets_dirs.items():
-            assert target != '.', "target must not be '.'"
+            assert target != '.', "Target must not be '.'"
             assert isinstance(dirs, list), "'dirs' must be an array"
             assert dirs, "'dirs' must not be empty"
             targets_dirs[target] = [root_dir / _expand_path(dir_) for dir_ in dirs]
