@@ -43,13 +43,15 @@ Use any file name you want.
 
 Cstow expands `~` and `$AN_ENVIRONMENT_VARIABLE`.
 
-| Name                 | Type             | Description                        | Default               |
-| -------------------- | ---------------- | ---------------------------------- | --------------------- |
-| root_dir             | String           | The root of stow directories       | /                     |
-| cmd_template         | String           | The template for GNU Stow commands | [See below](#default) |
-| targets_dirs         | Table            | Targets (keys) and dirs (values)   |                       |
-| targets_dirs (key)   | String           | A target directory                 |                       |
-| targets_dirs (value) | Array of strings | Stow directories for the target    |                       |
+| Name                 | Type             | Description                             | Default               |
+| -------------------- | ---------------- | --------------------------------------- | --------------------- |
+| root_dir             | String           | The root of stow directories            | /                     |
+| cmd_template         | String           | The [template][0] for GNU Stow commands | [See below](#default) |
+| targets_dirs         | Table            | Targets (keys) and dirs (values)        |                       |
+| targets_dirs (key)   | String           | A target directory                      |                       |
+| targets_dirs (value) | Array of strings | Stow directories for the target         |                       |
+
+[0]: https://peps.python.org/pep-0292/#a-simpler-proposal
 
 ### root_dir
 
