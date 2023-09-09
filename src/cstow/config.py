@@ -182,7 +182,6 @@ class Config(pd.BaseModel, extra='forbid'):
 
 
 def _env_var_to_path(env_var: str) -> Path:
-    try:
-        return Path(os.environ[env_var])
-    except KeyError:
-        raise ConfigEnvVarUnsetError(env_var)
+    if path := os.environ.get(env_var):
+        return Path(path)
+    raise ConfigEnvVarUnsetError(env_var)
