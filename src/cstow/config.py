@@ -60,7 +60,7 @@ class InvalidConfigError(ConfigError):
         for err in exception.errors():
             loc = err['loc'][0]
             inp = err['input']
-            msg = err['msg'].replace('Assertion failed, ', '')
+            msg = err['msg'].removeprefix('Assertion failed, ')
             messages.append(f'{loc}\n    input: {inp}\n    error: {msg}')
 
         return cls(path, '\n\n'.join(messages))
