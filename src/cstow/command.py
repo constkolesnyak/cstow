@@ -2,9 +2,16 @@ import dataclasses as dc
 import shlex
 from enum import StrEnum, auto
 from string import Template
-from typing import Iterator
+from typing import Iterator, Self
 
 from path import Path
+
+
+class InvalidCmdActionError(Exception):
+    def __init__(self, action: str) -> None:
+        super().__init__(
+            f"Action '{action}' is invalid\nUse one of these: " + ", ".join(CmdAction)
+        )
 
 
 class CmdAction(StrEnum):
@@ -15,24 +22,15 @@ class CmdAction(StrEnum):
     RESTOW = auto()
     DELETE = auto()
 
-
-class InvalidCmdActionError(Exception):
-    def __init__(self, action: str) -> None:
-        super().__init__(
-            f"Action '{action}' is invalid\nUse one of these: " + ", ".join(CmdAction)
-        )
-
-
-def str_to_action(action: str) -> CmdAction:
-    """
-    Validate a GNU Stow action.
-
-    Raises:
-        InvalidCmdActionError: If the GNU Stow action is invalid.
-    """
-    if action in list(CmdAction):
-        return CmdAction(action)
-    raise InvalidCmdActionError(action)
+    @classmethod
+    def from_str(cls, action: str) -> Self:
+        """
+        Raises:
+            InvalidCmdActionError: If the GNU Stow action is invalid.
+        """
+        if action in list(cls):
+            return cls(action)
+        raise InvalidCmdActionError(action)
 
 
 @dc.dataclass(frozen=True)
