@@ -13,13 +13,13 @@ cstow = 'cstow.main:main'
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pydantic = "^2.1.1"
+pydantic = "^2.4"
 fire = "^0"
 path = "^16.7.1"
 rich = "^13.5.2"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
+pytest = "^9.0.3"
 coverage = "^7.3.0"
 
 

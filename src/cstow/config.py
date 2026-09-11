@@ -111,7 +111,7 @@ class Config(pd.BaseModel, extra='forbid'):
     @pd.field_validator('targets_dirs', mode='before')
     @classmethod
     def _(
-        cls, targets_dirs: dict[str, list[str]], info: pd.FieldValidationInfo
+        cls, targets_dirs: dict[str, list[str]], info: pd.ValidationInfo
     ) -> dict[str, list[Path]]:
         """
         Expand dirs in targets_dirs and prefix them with the root_dir.
