@@ -1,5 +1,10 @@
 # Cstow
 
+[![PyPI](https://img.shields.io/pypi/v/cstow)](https://pypi.org/project/cstow)
+[![Python](https://img.shields.io/pypi/pyversions/cstow)](https://pypi.org/project/cstow)
+[![CI](https://github.com/constkolesnyak/cstow/actions/workflows/ci.yml/badge.svg)](https://github.com/constkolesnyak/cstow/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 ![Demo](misc/demo.gif)
 
 ## About
@@ -8,10 +13,6 @@ There's lots of [dotfiles managers](https://wiki.archlinux.org/title/Dotfiles#To
 but my favorite is [GNU Stow](https://www.gnu.org/software/stow).
 
 It has only two problems: boring UI and no config. Cstow solves them.
-
-### Name
-
-`C`on`st`antine's GNU St`ow` wrapper.
 
 ### Some [GNU Stow Terminology](https://www.gnu.org/software/stow/manual/stow.html#Terminology)
 
@@ -29,15 +30,31 @@ Or pip
 
     pip install cstow
 
+## Name
+
+`C`on`st`antine's GNU St`ow` wrapper.
+
 ## Configuration
 
 Set `CSTOW_CONFIG_PATH` to `path/to/your/cstow_config.toml`.
 Use any file name you want.
 
-### Examples
+### Example
 
-- My [cstow.toml](https://github.com/constkolesnyak/dotfiles/blob/main/cstow.toml).
-- More [examples](tests/testing_data/configs).
+```toml
+# Every stow dir is looked up under root_dir unless it's an absolute path.
+root_dir = '~/dotfiles'
+
+# Optional. It must keep all three placeholders.
+cmd_template = 'stow --$action --no-folding --verbose --target=$target --dir=$dir .'
+
+[targets_dirs]
+'~' = ['git', 'zsh', 'tmux']
+'~/.config' = ['nvim', 'alacritty', 'starship']
+'$XDG_DATA_HOME/applications' = ['desktop-entries']
+```
+
+More [examples](tests/testing_data/configs).
 
 ### Config Contents
 
