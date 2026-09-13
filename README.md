@@ -22,7 +22,7 @@ It has only two problems: boring UI and no config. Cstow solves them.
 
 ## Installation
 
-Use [pipx](https://pypa.github.io/pipx)
+Use [pipx](https://pipx.pypa.io)
 
     pipx install cstow
 
